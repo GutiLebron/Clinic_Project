@@ -1,0 +1,104 @@
+@Metadata.layer: #CORE
+@UI.headerInfo.title.type: #STANDARD
+@UI.headerInfo.title.value: 'LastName'
+@UI.headerInfo.description.type: #STANDARD
+@UI.headerInfo.description.value: 'FirstName'
+annotate view ZC_CLINIC_DOCTOR with
+{
+  @EndUserText.label: 'Doctoruuid'
+  @UI.facet: [ {
+    label: 'Datos Doctor', 
+    id: 'GeneralInfo', 
+    purpose: #STANDARD, 
+    position: 10 , 
+    type: #IDENTIFICATION_REFERENCE
+  } ]
+  @UI.identification: [ {
+    position: 10 , 
+    label: 'Doctoruuid'
+  } ]
+  @UI.lineItem: [ {
+    position: 10 , 
+    label: 'Doctoruuid'
+  } ]
+  DoctorUUID;
+  
+  @EndUserText.label: 'Nombre'
+  @UI.identification: [ {
+    position: 20 , 
+    label: 'Firstname'
+  } ]
+  @UI.lineItem: [ {
+    position: 20 , 
+    label: 'Firstname'
+  } ]
+  @UI.selectionField: [ {
+    position: 20 
+  } ]
+  FirstName;
+  
+  @EndUserText.label: 'Apellidos'
+  @UI.identification: [ {
+    position: 30 , 
+    label: 'Lastname'
+  } ]
+  @UI.lineItem: [ {
+    position: 30 , 
+    label: 'Lastname'
+  } ]
+  @UI.selectionField: [ {
+    position: 30 
+  } ]
+  LastName;
+  
+  @EndUserText.label: 'Nº Colegiado'
+  @UI.identification: [ {
+    position: 40 , 
+    label: 'Licensenumber'
+  } ]
+  @UI.lineItem: [ {
+    position: 40 , 
+    label: 'Licensenumber'
+  } ]
+  @UI.selectionField: [ {
+    position: 40 
+  } ]
+  LicenseNumber;
+  
+  @EndUserText.label: 'Teléfono'
+  @UI.identification: [ {
+    position: 50 , 
+    label: 'Phone'
+  } ]
+  @UI.lineItem: [ {
+    position: 50 , 
+    label: 'Phone'
+  } ]
+  Phone;
+  
+  @EndUserText.label: 'Correo Electónico'
+  @UI.identification: [ {
+    position: 60 , 
+    label: 'Email'
+  } ]
+  @UI.lineItem: [ {
+    position: 60 , 
+    label: 'Email'
+  } ]
+  Email;
+  
+  @EndUserText.label: 'Activo'
+  @UI.identification: [ {
+    position: 70 , 
+    label: 'Active'
+  } ]
+  @UI.lineItem: [ {
+    position: 70 , 
+    label: 'Active'
+  } ]
+  @UI.selectionField: [ {
+    position: 70 
+  } ]
+  Active;
+  
+}

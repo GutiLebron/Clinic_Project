@@ -1,0 +1,71 @@
+managed implementation in class ZBP_R_CLINIC_PATIENT unique;
+strict ( 2 );
+with draft; //AL COMENTAR DAN ERRORES
+extensible;
+define behavior for ZR_CLINIC_PATIENT alias Patient
+persistent table ZCLINIC_PATIENT
+extensible
+draft table ZCLINIC_PTIENT_D
+etag master LocalLastChangedAt
+lock master total etag LastChangedAt
+authorization master( global )
+{
+
+  field ( readonly )
+   CreatedBy,
+   CreatedAt,
+   LastChangedBy,
+   LastChangedAt,
+   LocalLastChangedAt;
+
+  field ( readonly : update, numbering : managed ) //indicamos comportamiento y el tipo
+   PatientUUID;
+
+  //Acciones CRUD
+  create;
+  update;
+  delete;
+
+  //Acciones personalizadas
+  action ( features : instance ) DeactivatePatient; // Dos acciones diferentes para poder escalarlas
+  action ( features : instance ) ReactivatePatient; // Hemos añadido feature : instance, para que fiori sepa si tiene habilitada la acción
+
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Edit;
+  draft action Resume;
+  draft determine action Prepare;
+
+
+//Anuciamos las acciones que tendrán "efectos secundarios"
+  side effects {
+
+    action DeactivatePatient affects
+    field Active,
+    permissions( action DeactivatePatient ),
+    permissions( action ReactivatePatient );
+
+    action ReactivatePatient affects
+    field Active,
+    permissions( action DeactivatePatient ),
+    permissions( action ReactivatePatient );
+
+}
+
+  mapping for ZCLINIC_PATIENT corresponding extensible
+  {
+    PatientUUID = PATIENT_UUID;
+    FirstName = FIRST_NAME;
+    LastName = LAST_NAME;
+    BirthDate = BIRTH_DATE;
+    Phone = PHONE;
+    Email = EMAIL;
+    Active = ACTIVE;
+    CreatedBy = CREATED_BY;
+    CreatedAt = CREATED_AT;
+    LastChangedBy = LAST_CHANGED_BY;
+    LastChangedAt = LAST_CHANGED_AT;
+    LocalLastChangedAt = LOCAL_LAST_CHANGED_AT;
+  }
+
+}

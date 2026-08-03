@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_MSAG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <T100A>
+    <ARBGB>ZMC_CLINIC_PATIENT</ARBGB>
+    <MASTERLANG>E</MASTERLANG>
+    <STEXT>Mensajes para los Patient Business Object</STEXT>
+   </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_CLINIC_PATIENT</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Patient has been deactivated successfully.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_CLINIC_PATIENT</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Patient is already deactivated.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_CLINIC_PATIENT</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>Patient has been reactivated successfully.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_CLINIC_PATIENT</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>Patient is already active.</TEXT>
+    </T100>
+   </T100>
+  </asx:values>
+ </asx:abap>
+</abapGit>

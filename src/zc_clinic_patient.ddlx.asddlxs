@@ -1,0 +1,134 @@
+@Metadata.layer: #CORE
+
+@UI.headerInfo.title.type: #STANDARD
+@UI.headerInfo.title.value: 'LastName'
+
+@UI.headerInfo.description.type: #STANDARD
+@UI.headerInfo.description.value: 'FirstName'
+
+annotate view ZC_CLINIC_PATIENT with
+{
+
+  /* ============================
+     FACET PRINCIPAL
+     ============================ */
+  @UI.facet: [{
+    label: 'Datos Paciente',
+    id: 'GeneralInfo',
+    purpose: #STANDARD,
+    position: 10,
+    type: #IDENTIFICATION_REFERENCE,
+    targetQualifier: 'General'
+  },
+  { 
+  label: 'Acciones',
+    id: 'GeneralActions',
+    purpose: #STANDARD,
+    position: 10,
+    type: #IDENTIFICATION_REFERENCE,
+    targetQualifier: 'Actions'
+  }
+  
+  ]
+ 
+
+  /* ============================
+     FIELDGROUP GENERAL
+     ============================ */
+  @EndUserText.label: 'PatientUUID'
+  @UI.identification: [
+    {
+      qualifier: 'General',
+      position: 10,
+      label: 'PatientUUID'
+    },
+    {
+      qualifier: 'Actions',
+      type: #FOR_ACTION,
+      dataAction: 'DeactivatePatient',
+      label: 'Deactivate Patient',
+      position: 80
+    },
+    {
+      qualifier: 'Actions',
+      type: #FOR_ACTION,
+      dataAction: 'ReactivatePatient',
+      label: 'Reactivate Patient',
+      position: 90
+    }
+  ]
+  PatientUUID;
+
+  @EndUserText.label: 'FirstName'
+  @UI.identification: [{
+    qualifier: 'General',
+    position: 20,
+    label: 'FirstName'
+  }]
+  @UI.lineItem: [{
+    position: 20,
+    label: 'FirstName'
+  }]
+  FirstName;
+
+  @EndUserText.label: 'LastName'
+  @UI.identification: [{
+    qualifier: 'General',
+    position: 30,
+    label: 'LastName'
+  }]
+  @UI.lineItem: [{
+    position: 30,
+    label: 'LastName'
+  }]
+  LastName;
+
+  @EndUserText.label: 'BirthDate'
+  @UI.identification: [{
+    qualifier: 'General',
+    position: 40,
+    label: 'BirthDate'
+  }]
+  @UI.lineItem: [{
+    position: 40,
+    label: 'BirthDate'
+  }]
+  BirthDate;
+
+  @EndUserText.label: 'Phone'
+  @UI.identification: [{
+    qualifier: 'General',
+    position: 50,
+    label: 'Phone'
+  }]
+  @UI.lineItem: [{
+    position: 50,
+    label: 'Phone'
+  }]
+  Phone;
+
+  @EndUserText.label: 'Email'
+  @UI.identification: [{
+    qualifier: 'General',
+    position: 60,
+    label: 'CORREO'
+  }]
+  @UI.lineItem: [{
+    position: 60,
+    label: 'EMAIL'
+  }]
+  Email;
+
+  @EndUserText.label: 'Active'
+  @UI.identification: [{
+    qualifier: 'General',
+    position: 70,
+    label: 'Active'
+  }]
+  @UI.lineItem: [{
+    position: 70,
+    label: 'Active'
+  }]
+  Active;
+
+}

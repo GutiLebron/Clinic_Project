@@ -1,0 +1,11 @@
+@EndUserText: {
+  label: 'Service Definition for ZC_CLINIC_PATIENT'
+}
+@ObjectModel: {
+  leadingEntity: {
+    name: 'ZC_CLINIC_PATIENT'
+  }
+}
+define service ZUI_CLINIC_PATIENT_O4 provider contracts odata_v4_ui {
+  expose ZC_CLINIC_PATIENT as Patient;
+}
