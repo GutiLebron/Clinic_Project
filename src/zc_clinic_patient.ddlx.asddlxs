@@ -24,12 +24,13 @@ annotate view ZC_CLINIC_PATIENT with
   label: 'Acciones',
     id: 'GeneralActions',
     purpose: #STANDARD,
-    position: 10,
+    position: 20,
     type: #IDENTIFICATION_REFERENCE,
     targetQualifier: 'Actions'
-  }
-  
-  ]
+  }]
+  //Podemos hacer un array de facets, que son como una especie de fieldset
+  //que nos agrupa por tipo cosas, ya sean datos personales, acciones, o cualquier
+  //organización dentro de los facets que queramos
  
 
   /* ============================
@@ -56,6 +57,9 @@ annotate view ZC_CLINIC_PATIENT with
       label: 'Reactivate Patient',
       position: 90
     }
+    //Las acciones deben ir asociados a un campo de las cds projection
+    //por convención en el key de la entidad, debemos asignar un facet
+    //y con la anotación type decir el tipo de elemento que tenemos.
   ]
   PatientUUID;
 

@@ -5,17 +5,55 @@
 @UI.headerInfo.description.value: 'FirstName'
 annotate view ZC_CLINIC_DOCTOR with
 {
-  @EndUserText.label: 'Doctoruuid'
+//Facet para DATOS
   @UI.facet: [ {
     label: 'Datos Doctor', 
     id: 'GeneralInfo', 
     purpose: #STANDARD, 
     position: 10 , 
-    type: #IDENTIFICATION_REFERENCE
-  } ]
+    type: #IDENTIFICATION_REFERENCE,
+    targetQualifier: 'GeneralInfo'
+    },
+//Facet para CONTACTO
+    {
+    label: 'Contacto Doctor', 
+    id: 'Contact', 
+    purpose: #STANDARD, 
+    position: 20, 
+    type: #IDENTIFICATION_REFERENCE,
+    targetQualifier: 'Contact'
+  },
+//Facet para ACCIONES  
+  { 
+  label: 'Acciones', 
+    id: 'GeneralActions', 
+    purpose: #STANDARD, 
+    position: 30 , 
+    type: #IDENTIFICATION_REFERENCE,
+    targetQualifier: 'GeneralActions'  
+  }]  
+//FIN DE FACET
+
+
+  @EndUserText.label: 'Doctoruuid'
   @UI.identification: [ {
+    qualifier: 'GeneralInfo',
     position: 10 , 
     label: 'Doctoruuid'
+  },
+  {
+    qualifier: 'GeneralActions',
+    type: #FOR_ACTION,
+    dataAction: 'ReactivateDoctor',
+    label: 'Reactivate Doctor',
+    position: 10 
+  },
+  { 
+  qualifier: 'GeneralActions',
+    type: #FOR_ACTION,
+    dataAction: 'DeactivateDoctor',
+    label: 'Deactivate Doctor',
+    position: 20
   } ]
   @UI.lineItem: [ {
     position: 10 , 
@@ -25,6 +63,7 @@ annotate view ZC_CLINIC_DOCTOR with
   
   @EndUserText.label: 'Nombre'
   @UI.identification: [ {
+    qualifier: 'GeneralInfo',
     position: 20 , 
     label: 'Firstname'
   } ]
@@ -39,6 +78,7 @@ annotate view ZC_CLINIC_DOCTOR with
   
   @EndUserText.label: 'Apellidos'
   @UI.identification: [ {
+    qualifier: 'GeneralInfo',
     position: 30 , 
     label: 'Lastname'
   } ]
@@ -53,6 +93,7 @@ annotate view ZC_CLINIC_DOCTOR with
   
   @EndUserText.label: 'Nº Colegiado'
   @UI.identification: [ {
+    qualifier: 'GeneralInfo',
     position: 40 , 
     label: 'Licensenumber'
   } ]
@@ -67,6 +108,7 @@ annotate view ZC_CLINIC_DOCTOR with
   
   @EndUserText.label: 'Teléfono'
   @UI.identification: [ {
+    qualifier: 'Contact',
     position: 50 , 
     label: 'Phone'
   } ]
@@ -78,6 +120,7 @@ annotate view ZC_CLINIC_DOCTOR with
   
   @EndUserText.label: 'Correo Electónico'
   @UI.identification: [ {
+    qualifier: 'Contact',
     position: 60 , 
     label: 'Email'
   } ]
@@ -89,6 +132,7 @@ annotate view ZC_CLINIC_DOCTOR with
   
   @EndUserText.label: 'Activo'
   @UI.identification: [ {
+    qualifier: 'GeneralInfo',
     position: 70 , 
     label: 'Active'
   } ]

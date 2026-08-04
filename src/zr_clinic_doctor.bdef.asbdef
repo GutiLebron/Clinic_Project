@@ -26,6 +26,24 @@ authorization master( global )
   update;
   delete;
 
+//Acciones custom
+  action DeactivateDoctor;
+  action ReactivateDoctor;
+
+  side effects {
+
+  action DeactivateDoctor affects
+  field Active,
+  permissions ( action DeactivateDoctor ),
+  permissions ( action ReactivateDoctor );
+
+  action ReactivateDoctor affects
+  field Active,
+  permissions ( action ReactivateDoctor ),
+  permissions ( action DeactivateDoctor );
+
+  }
+
   draft action Activate optimized;
   draft action Discard;
   draft action Edit;

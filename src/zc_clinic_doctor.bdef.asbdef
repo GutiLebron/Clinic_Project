@@ -7,6 +7,7 @@ define behavior for ZC_CLINIC_DOCTOR alias Doctor
 extensible
 use etag
 {
+
   use create;
   use update;
   //use delete; Borrado lógico
@@ -17,4 +18,7 @@ use etag
   use action Resume;
   use action Prepare;
 
+  //Acciones Custom
+  use action DeactivateDoctor;
+  use action ReactivateDoctor;
 }
