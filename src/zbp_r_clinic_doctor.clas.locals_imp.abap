@@ -18,27 +18,28 @@ CLASS LHC_ZR_CLINIC_DOCTOR IMPLEMENTATION.
   METHOD GET_GLOBAL_AUTHORIZATIONS.
   ENDMETHOD.
   METHOD DeactivateDoctor.
-
+*FIRST WE READ AND STORE THEM IN A INTERNAL TABLE*
     READ ENTITIES OF zr_clinic_doctor
         ENTITY Doctor
         FIELDS ( Active )
         WITH CORRESPONDING #( keys )
         RESULT DATA(lt_doctor).
-
+*LOOP THROUGHT INTERNAL TABLE THE STORED ENTITIES*
    LOOP AT lt_doctor INTO DATA(ls_doctor).
 
    DATA lt_update TYPE TABLE FOR UPDATE zr_clinic_doctor.
-
+*TAKE ENTITIES TO MODIFY IN A INTERNAL TABLE TO MODIFIY, JUST THE ENTITIES WHO MEET CONDITIONS*
     IF ls_doctor-Active = abap_true.
         APPEND VALUE #(
             %tky = ls_doctor-%tky
             Active = abap_false
         ) TO lt_update.
     ELSE.
+*USE FAILED STRUCTURE TO STORE THE ENITIES THAT DO NOT MEET THE CONTITIONS IN OTHER INTERNAL TABLE *
         APPEND VALUE #(
             %tky = ls_doctor-%tky
         ) TO failed-doctor.
-
+*ADD ERROR MESSAGES TO REPORTED STRUCTURE*
         APPEND VALUE #(
             %tky = ls_doctor-%tky
             %msg =
@@ -48,10 +49,9 @@ CLASS LHC_ZR_CLINIC_DOCTOR IMPLEMENTATION.
                 severity = if_abap_behv_message=>severity-error
                 )
         ) TO reported-doctor.
-
     ENDIF.
    ENDLOOP.
-
+*IF THE INTERNAL TABLE TO UPDATE IS NOT EMPTY WE PROCEED TO DO THE MODIFY*
     IF lt_update IS NOT INITIAL.
 
         MODIFY ENTITIES OF zr_clinic_doctor
@@ -59,6 +59,7 @@ CLASS LHC_ZR_CLINIC_DOCTOR IMPLEMENTATION.
                 UPDATE
                     FIELDS ( Active )
                     WITH lt_update.
+*AFTER THE UPDATE RETURN THE SUCCESS MESSAGES*
         LOOP AT lt_update INTO DATA(ls_update).
 
             APPEND VALUE #(

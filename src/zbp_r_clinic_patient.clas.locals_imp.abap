@@ -141,7 +141,7 @@ CLASS lhc_zr_clinic_patient IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_instance_features.
-
+*FIRST WE READ AND STORE THEM IN A INTERNAL TABLE*
     READ ENTITIES OF zr_clinic_patient
         ENTITY Patient
         FIELDS ( Active )
@@ -149,13 +149,13 @@ CLASS lhc_zr_clinic_patient IMPLEMENTATION.
         RESULT DATA(lt_patient).
 
     LOOP AT lt_patient into DATA(ls_patient).
-
+*CONDITION TO MEET INTO THE ENTITY*
         IF ls_patient-Active = abap_true.
 
             APPEND VALUE #(
 
             %tky = ls_patient-%tky
-
+*WITH THE TECHNICAL FIELD %ACTION WE CAN ENABLE OR DISABLE ACTIONS FROM THE BEHAVIOR DEFINITION*
             %action-DeactivatePatient = if_abap_behv=>fc-o-enabled
             %action-ReactivatePatient = if_abap_behv=>fc-o-disabled
 
