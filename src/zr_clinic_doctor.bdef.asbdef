@@ -27,8 +27,8 @@ authorization master( global )
   delete;
 
 //Acciones custom
-  action DeactivateDoctor;
-  action ReactivateDoctor;
+  action ( features : instance ) DeactivateDoctor ;
+  action ( features : instance ) ReactivateDoctor;
 
   side effects {
 

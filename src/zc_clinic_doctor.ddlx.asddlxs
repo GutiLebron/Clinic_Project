@@ -55,10 +55,6 @@ annotate view ZC_CLINIC_DOCTOR with
     label: 'Deactivate Doctor',
     position: 20
   } ]
-  @UI.lineItem: [ {
-    position: 10 , 
-    label: 'Doctoruuid'
-  } ]
   DoctorUUID;
   
   @EndUserText.label: 'Nombre'
