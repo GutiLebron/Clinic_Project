@@ -1,6 +1,7 @@
 managed implementation in class ZBP_R_CLINIC_DOCTOR unique;
 strict ( 2 );
 with draft;
+with cross associations;
 extensible;
 define behavior for ZR_CLINIC_DOCTOR alias Doctor
 persistent table ZCLINIC_DOCTOR
@@ -25,10 +26,14 @@ authorization master( global )
   create;
   update;
   delete;
+//Añadimos la asociación con la tabla/entidad DocSpec
+//  association _DocSpec;
 
 //Acciones custom
   action ( features : instance ) DeactivateDoctor ;
   action ( features : instance ) ReactivateDoctor;
+
+
 
   side effects {
 

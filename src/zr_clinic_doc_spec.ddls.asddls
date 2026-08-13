@@ -1,17 +1,20 @@
 @AccessControl.authorizationCheck: #MANDATORY
 @Metadata.allowExtensions: true
-@ObjectModel.sapObjectNodeType.name: 'ZCLINIC_SPEC'
+@ObjectModel.sapObjectNodeType.name: 'ZCLINIC_DOC_SPEC'
 @EndUserText.label: '###GENERATED Core Data Service Entity'
+//Definimos como una vista
+define view entity ZR_CLINIC_DOC_SPEC
+    as select from zclinic_doc_spec
+    
+//Definimos asociaciones  
+association to ZR_CLINIC_DOCTOR as _Doctor
+    on $projection.Doctoruuid = _Doctor.DoctorUUID
 
-define root view entity ZR_CLINIC_SPEC
-  as select from zclinic_spec
-  
-association [0..*] to ZR_CLINIC_DOC_SPEC as _DocSpec
-    on $projection.Specuuid = _DocSpec.Specuuid
+association to ZR_CLINIC_SPEC as _Spec
+    on $projection.Specuuid = _Spec.Specuuid
 {
+  key doctoruuid as Doctoruuid,
   key specuuid as Specuuid,
-  name as Name,
-  active as Active,
   @Semantics.user.createdBy: true
   created_by as CreatedBy,
   @Semantics.systemDateTime.createdAt: true
@@ -23,5 +26,10 @@ association [0..*] to ZR_CLINIC_DOC_SPEC as _DocSpec
   @Semantics.systemDateTime.localInstanceLastChangedAt: true
   local_last_changed_at as LocalLastChangedAt,
   
-  _DocSpec
+//Añadimos las entidades de la asociación  
+  _Doctor,
+  _Spec
 }
+
+//Definimos las relaciones donde Doctor va a ser el padre y 
+//Spec va a ser una asociación

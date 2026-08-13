@@ -6,7 +6,9 @@
 "ZCLINIC_SPEC"
 ],
 "ASSOCIATED":
-[],
+[
+"ZR_CLINIC_DOC_SPEC"
+],
 "BASE":
 [],
 "ANNO_REF":

@@ -9,4 +9,5 @@
 define service ZUI_CLINIC_DOCTOR_O4
   provider contracts odata_v4_ui {
   expose ZC_CLINIC_DOCTOR as Doctor;
+  expose ZC_CLINIC_SPEC   as Spec;
 }

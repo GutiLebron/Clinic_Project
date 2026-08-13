@@ -10,7 +10,8 @@
 define root view entity ZC_CLINIC_DOCTOR
   provider contract transactional_query
   as projection on ZR_CLINIC_DOCTOR
-  association [1..1] to ZR_CLINIC_DOCTOR as _BaseEntity on $projection.DoctorUUID = _BaseEntity.DoctorUUID
+  association [1..1] to ZR_CLINIC_DOCTOR as _BaseEntity 
+  on $projection.DoctorUUID = _BaseEntity.DoctorUUID
 {
   key DoctorUUID,
   FirstName,
@@ -39,5 +40,7 @@ define root view entity ZC_CLINIC_DOCTOR
     systemDateTime.localInstanceLastChangedAt: true
   }
   LocalLastChangedAt,
-  _BaseEntity
+  
+  _BaseEntity,//Relacion de asociación con la entidad Base
+  _DocSpec
 }
