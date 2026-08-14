@@ -1,51 +1,62 @@
-managed implementation in class ZBP_R_CLINIC_DOCTOR unique;
+managed with additional save //para que pueda guardar en otras tablas o entidades
+implementation in class ZBP_R_CLINIC_DOCTOR unique;
 strict ( 2 );
 with draft;
 with cross associations;
 extensible;
 define behavior for ZR_CLINIC_DOCTOR alias Doctor
-persistent table ZCLINIC_DOCTOR
+persistent table zclinic_doctor
 extensible
-draft table ZCLINIC_DOCTOR_D
+draft table zclinic_doctor_d
 etag master LocalLastChangedAt
 lock master total etag LastChangedAt
-authorization master( global )
+authorization master ( global )
 {
 
   field ( readonly : update, numbering : managed )
-   Doctoruuid;
+  Doctoruuid;
 
   field ( readonly )
-   CreatedBy,
-   CreatedAt,
-   LastChangedBy,
-   LastChangedAt,
-   LocalLastChangedAt;
+  CreatedBy,
+  CreatedAt,
+  LastChangedBy,
+  LastChangedAt,
+  LocalLastChangedAt;
 
-//Acciones CRUD
+  //Acciones CRUD
   create;
   update;
   delete;
-//Añadimos la asociación con la tabla/entidad DocSpec
-//  association _DocSpec;
+  //Añadimos la Composición con la tabla/entidad DocSpec
+  association _DocSpec {
+    create;
+    with draft;
+  }
 
-//Acciones custom
-  action ( features : instance ) DeactivateDoctor ;
+  //ACCIONES CUSTOM
+  //Borrado lógico
+  action ( features : instance ) DeactivateDoctor;
   action ( features : instance ) ReactivateDoctor;
+  //Añadir especialidad
+  action ( features : instance ) AddSpecialty
+    parameter ZCE_CLINIC_SPEC_ACTION;
+  action ( features : instance ) RemoveSpecialty
+    parameter ZCE_CLINIC_SPEC_ACTION;
 
 
 
-  side effects {
+  side effects
+  {
 
-  action DeactivateDoctor affects
-  field Active,
-  permissions ( action DeactivateDoctor ),
-  permissions ( action ReactivateDoctor );
+    action DeactivateDoctor affects
+        field Active,
+        permissions ( action DeactivateDoctor ),
+        permissions ( action ReactivateDoctor );
 
-  action ReactivateDoctor affects
-  field Active,
-  permissions ( action ReactivateDoctor ),
-  permissions ( action DeactivateDoctor );
+    action ReactivateDoctor affects
+        field Active,
+        permissions ( action ReactivateDoctor ),
+        permissions ( action DeactivateDoctor );
 
   }
 
@@ -55,20 +66,58 @@ authorization master( global )
   draft action Resume;
   draft determine action Prepare;
 
-  mapping for ZCLINIC_DOCTOR corresponding extensible
-  {
-    DoctorUUID = DOCTORUUID;
-    FirstName = FIRSTNAME;
-    LastName = LASTNAME;
-    LicenseNumber = LICENSENUMBER;
-    Phone = PHONE;
-    Email = EMAIL;
-    Active = ACTIVE;
-    CreatedBy = CREATED_BY;
-    CreatedAt = CREATED_AT;
-    LastChangedBy = LAST_CHANGED_BY;
-    LastChangedAt = LAST_CHANGED_AT;
-    LocalLastChangedAt = LOCAL_LAST_CHANGED_AT;
-  }
+  mapping for zclinic_doctor corresponding extensible
+    {
+      DoctorUUID         = DOCTORUUID;
+      FirstName          = FIRSTNAME;
+      LastName           = LASTNAME;
+      LicenseNumber      = LICENSENUMBER;
+      Phone              = PHONE;
+      Email              = EMAIL;
+      Active             = ACTIVE;
+      CreatedBy          = CREATED_BY;
+      CreatedAt          = CREATED_AT;
+      LastChangedBy      = LAST_CHANGED_BY;
+      LastChangedAt      = LAST_CHANGED_AT;
+      LocalLastChangedAt = LOCAL_LAST_CHANGED_AT;
+    }
 
+}
+
+define behavior for ZR_CLINIC_DOC_SPEC alias DocSpec
+persistent table zclinic_doc_spec
+draft table zclnc_doc_spec_d
+lock dependent by _Doctor
+authorization dependent by _Doctor
+{
+    update;
+    delete;
+
+    association _Doctor {
+        with draft;
+    }
+    association _Spec;
+
+    field ( readonly : update )
+        Doctoruuid,
+        Specuuid;
+
+
+    field ( readonly )
+        CreatedBy,
+        CreatedAt,
+        LastChangedBy,
+        LastChangedAt,
+        LocalLastChangedAt;
+
+    mapping for zclinic_doc_spec corresponding
+    {
+        DoctorUUID = DOCTORUUID;
+        SpecUUID = SPECUUID;
+        CreatedBy = CREATED_BY;
+        CreatedAt = CREATED_AT;
+        LastChangedBy = LAST_CHANGED_BY;
+        LastChangedAt = LAST_CHANGED_AT;
+        LocalLastChangedAt = LOCAL_LAST_CHANGED_AT;
+    }
 }

@@ -7,7 +7,7 @@ define view entity ZR_CLINIC_DOC_SPEC
     as select from zclinic_doc_spec
     
 //Definimos asociaciones  
-association to ZR_CLINIC_DOCTOR as _Doctor
+association to parent ZR_CLINIC_DOCTOR as _Doctor
     on $projection.Doctoruuid = _Doctor.DoctorUUID
 
 association to ZR_CLINIC_SPEC as _Spec

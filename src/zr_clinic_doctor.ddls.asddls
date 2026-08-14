@@ -7,8 +7,7 @@ define root view entity ZR_CLINIC_DOCTOR
   as select from zclinic_doctor
   
 //Añadimos la asociación con su cardinalidad DOC(1) -> (*)DocSpec
-association [0..*] to ZR_CLINIC_DOC_SPEC as _DocSpec
-    on $projection.DoctorUUID = _DocSpec.Doctoruuid
+composition [0..*] of ZR_CLINIC_DOC_SPEC as _DocSpec
 {
   key doctoruuid as DoctorUUID,
   firstname as FirstName,
