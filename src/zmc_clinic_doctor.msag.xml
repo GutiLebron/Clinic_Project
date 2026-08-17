@@ -32,6 +32,24 @@
      <MSGNR>004</MSGNR>
      <TEXT>Doctor is already active.</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_CLINIC_DOCTOR</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Specialty not exists or is inactive</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_CLINIC_DOCTOR</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>Doctor already has the Specialty</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_CLINIC_DOCTOR</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>Specialty has been added</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

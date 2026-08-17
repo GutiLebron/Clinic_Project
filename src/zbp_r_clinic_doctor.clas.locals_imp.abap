@@ -1,4 +1,23 @@
+CLASS lsc_zr_clinic_doctor DEFINITION INHERITING FROM cl_abap_behavior_saver.
+
+  PROTECTED SECTION.
+
+    METHODS save_modified REDEFINITION.
+
+ENDCLASS.
+
+CLASS lsc_zr_clinic_doctor IMPLEMENTATION.
+
+  METHOD save_modified.
+
+
+
+  ENDMETHOD.
+
+ENDCLASS.
+
 CLASS lhc_zr_clinic_doctor DEFINITION INHERITING FROM cl_abap_behavior_handler.
+
   PRIVATE SECTION.
     METHODS:
       get_global_authorizations FOR GLOBAL AUTHORIZATION
@@ -12,11 +31,17 @@ CLASS lhc_zr_clinic_doctor DEFINITION INHERITING FROM cl_abap_behavior_handler.
         RESULT result,
 
 *CUSTOM METHODS*
-      DeactivateDoctor FOR MODIFY
+      DeactivateDoctor
+        FOR MODIFY
         IMPORTING keys FOR ACTION Doctor~DeactivateDoctor,
 
-      ReactivateDoctor FOR MODIFY
-        IMPORTING keys FOR ACTION Doctor~ReactivateDoctor.
+      ReactivateDoctor
+        FOR MODIFY
+        IMPORTING keys FOR ACTION Doctor~ReactivateDoctor,
+
+      AddSpecialty
+        FOR MODIFY
+        keys FOR ACTION Doctor~AddSpecialty.
 ENDCLASS.
 
 CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
@@ -177,6 +202,122 @@ CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
         ENDIF.
     ENDLOOP.
 
+
+  ENDMETHOD.
+
+  METHOD AddSpecialty.
+
+  LOOP AT keys INTO DATA(ls_keys).
+
+    DATA(lv_doctor_uuid) = ls_keys-DoctorUUID.
+    DATA(lv_spec_uuid) = ls_keys-%param-SpecUUID.
+
+*CHECK IF SPEC EXISTS AND IS ACTIVE
+        READ ENTITIES OF zr_clinic_spec
+            ENTITY Spec
+            FIELDS ( Specuuid Active )
+            WITH VALUE #(
+                (
+                    %key-Specuuid = lv_spec_uuid
+                )
+
+            ) RESULT DATA(lt_spec).
+
+        IF lt_spec IS INITIAL
+            OR ( lt_spec IS NOT INITIAL AND lt_spec[ 1 ]-Active = abap_false ).
+
+            APPEND VALUE #(
+                %tky = ls_keys-%tky
+            ) TO failed-doctor.
+
+            APPEND VALUE #(
+
+                %tky = ls_keys-%tky
+                %msg = new_message(
+                    id = 'ZMC_CLINIC_DOCTOR'
+                    number = '005'
+                    severity = if_abap_behv_message=>severity-error
+                )
+
+            ) TO reported-doctor.
+
+            CONTINUE.
+
+        ENDIF.
+
+*CHECK IF THE RELATIONSHIP ALREADY EXISTS
+
+        SELECT SINGLE
+            FROM zr_clinic_doc_spec
+            FIELDS  Specuuid,
+                    Doctoruuid
+            WHERE   Specuuid = @lv_spec_uuid
+                    AND Doctoruuid = @lv_doctor_uuid
+            INTO    @DATA(ls_doc_spec).
+
+*CATCH THE ERROR IF THE SELECT WAS WRONG
+        IF sy-subrc = 0.
+
+            APPEND VALUE #(
+                %tky = ls_keys-%tky
+            ) TO failed-doctor.
+*SEND THE MESSAGE ERROR
+            APPEND VALUE #(
+                %tky = ls_keys-%tky
+                %msg = new_message(
+                    id = 'ZMC_CLINIC_DOCTOR'
+                    number = '006'
+                    severity = if_abap_behv_message=>severity-error
+                 )
+             ) TO reported-doctor.
+
+             CONTINUE.
+
+        ENDIF.
+
+        DATA(lv_cid) = |DOCSPEC_{ lv_spec_uuid }|.
+*CREATE THE NEW REGISTRY
+        MODIFY ENTITIES OF zr_clinic_doctor
+            ENTITY Doctor
+            CREATE BY \_DocSpec
+            FIELDS ( Specuuid )
+            WITH VALUE #(
+                (
+                    %tky = ls_keys-%tky
+                    %target = VALUE #(
+                        (
+                            %cid = lv_cid
+                            Specuuid = lv_spec_uuid
+                        )
+                    )
+                )
+            )
+            failed DATA(lt_failed)
+            reported DATA(lt_reported).
+
+         IF lt_failed IS NOT INITIAL.
+
+            APPEND VALUE #(
+                %tky = ls_keys-%tky
+            ) TO failed-doctor.
+
+            CONTINUE.
+
+         ENDIF.
+
+*SEND A SUCCESFULL MESSAGE
+         APPEND VALUE #(
+
+            %tky = ls_keys-%tky
+            %msg = new_message(
+                id = 'ZMC_CLINIC_DOCTOR'
+                number = '007'
+                severity = if_abap_behv_message=>severity-success
+            )
+
+         ) TO reported-doctor.
+
+  ENDLOOP.
 
   ENDMETHOD.
 

@@ -54,7 +54,16 @@ annotate view ZC_CLINIC_DOCTOR with
     dataAction: 'DeactivateDoctor',
     label: 'Deactivate Doctor',
     position: 20
-  } ]
+  },
+  {
+  qualifier: 'GeneralActions',
+    type: #FOR_ACTION,
+    dataAction: 'AddSpecialty',
+    label: 'Add Specialty',
+    position: 30
+  } 
+  
+  ]
   DoctorUUID;
   
   @EndUserText.label: 'Nombre'
