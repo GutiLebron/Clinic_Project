@@ -41,6 +41,6 @@ define root view entity ZC_CLINIC_DOCTOR
   }
   LocalLastChangedAt,
   
-  _BaseEntity,//Relacion de asociación con la entidad Base
-  _DocSpec
+  _BaseEntity
+  //Relación asociación con la entidad Base
 }
