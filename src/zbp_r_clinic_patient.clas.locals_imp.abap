@@ -25,6 +25,7 @@ CLASS lhc_zr_clinic_patient IMPLEMENTATION.
   METHOD DeactivatePatient.
 
     READ ENTITIES OF zr_clinic_patient
+        IN LOCAL MODE
         ENTITY Patient
         FIELDS ( Active )
         WITH CORRESPONDING #( keys )
@@ -59,6 +60,7 @@ CLASS lhc_zr_clinic_patient IMPLEMENTATION.
     IF lt_update IS NOT INITIAL.
 
       MODIFY ENTITIES OF zr_clinic_patient
+          IN LOCAL MODE
           ENTITY Patient
           UPDATE
               FIELDS ( Active )
@@ -83,6 +85,7 @@ CLASS lhc_zr_clinic_patient IMPLEMENTATION.
   METHOD ReactivatePatient.
 
     READ ENTITIES OF zr_clinic_patient
+        IN LOCAL MODE
         ENTITY Patient
         FIELDS ( Active )
         WITH CORRESPONDING #( keys )
@@ -117,6 +120,7 @@ CLASS lhc_zr_clinic_patient IMPLEMENTATION.
     IF lt_update IS NOT INITIAL.
 
         MODIFY ENTITIES OF zr_clinic_patient
+            IN LOCAL MODE
             ENTITY Patient
             UPDATE
             FIELDS ( Active )
@@ -143,6 +147,7 @@ CLASS lhc_zr_clinic_patient IMPLEMENTATION.
   METHOD get_instance_features.
 *FIRST WE READ AND STORE THEM IN A INTERNAL TABLE*
     READ ENTITIES OF zr_clinic_patient
+        IN LOCAL MODE
         ENTITY Patient
         FIELDS ( Active )
         WITH CORRESPONDING #( keys )
