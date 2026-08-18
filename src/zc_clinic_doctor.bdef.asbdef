@@ -22,4 +22,5 @@ use etag
   use action DeactivateDoctor;
   use action ReactivateDoctor;
   use action AddSpecialty;
+  use action RemoveSpecialty;
 }

@@ -50,6 +50,18 @@
      <MSGNR>007</MSGNR>
      <TEXT>Specialty has been added</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_CLINIC_DOCTOR</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>Doctor hasn&apos;t the Specialty</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_CLINIC_DOCTOR</ARBGB>
+     <MSGNR>009</MSGNR>
+     <TEXT>Specialty has been removed from Doctor</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

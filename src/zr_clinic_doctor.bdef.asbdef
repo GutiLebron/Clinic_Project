@@ -1,5 +1,4 @@
-managed with additional save //para que pueda guardar en otras tablas o entidades
-implementation in class ZBP_R_CLINIC_DOCTOR unique;
+managed implementation in class ZBP_R_CLINIC_DOCTOR unique;
 strict ( 2 );
 with draft;
 with cross associations;

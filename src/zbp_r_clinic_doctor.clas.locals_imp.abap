@@ -1,21 +1,3 @@
-CLASS lsc_zr_clinic_doctor DEFINITION INHERITING FROM cl_abap_behavior_saver.
-
-  PROTECTED SECTION.
-
-    METHODS save_modified REDEFINITION.
-
-ENDCLASS.
-
-CLASS lsc_zr_clinic_doctor IMPLEMENTATION.
-
-  METHOD save_modified.
-
-
-
-  ENDMETHOD.
-
-ENDCLASS.
-
 CLASS lhc_zr_clinic_doctor DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
   PRIVATE SECTION.
@@ -41,7 +23,11 @@ CLASS lhc_zr_clinic_doctor DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
       AddSpecialty
         FOR MODIFY
-        keys FOR ACTION Doctor~AddSpecialty.
+        keys FOR ACTION Doctor~AddSpecialty,
+
+      RemoveSpecialty
+        FOR MODIFY
+        keys FOR ACTION Doctor~RemoveSpecialty.
 ENDCLASS.
 
 CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
@@ -52,6 +38,7 @@ CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
   METHOD DeactivateDoctor.
 *FIRST WE READ AND STORE THEM IN A INTERNAL TABLE*
     READ ENTITIES OF zr_clinic_doctor
+        IN LOCAL MODE
         ENTITY Doctor
         FIELDS ( Active )
         WITH CORRESPONDING #( keys )
@@ -89,6 +76,7 @@ CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
     IF lt_update IS NOT INITIAL.
 
       MODIFY ENTITIES OF zr_clinic_doctor
+          IN LOCAL MODE
           ENTITY Doctor
               UPDATE
                   FIELDS ( Active )
@@ -115,6 +103,7 @@ CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
   METHOD ReactivateDoctor.
 
     READ ENTITIES OF zr_clinic_doctor
+      IN LOCAL MODE
       ENTITY Doctor
       FIELDS ( Active )
       WITH CORRESPONDING #( keys )
@@ -150,6 +139,7 @@ CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
     IF lt_update IS NOT INITIAL.
 
       MODIFY ENTITIES OF zr_clinic_doctor
+          IN LOCAL MODE
           ENTITY Doctor
           UPDATE
               FIELDS ( Active )
@@ -175,6 +165,7 @@ CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
   METHOD get_instance_features.
 
     READ ENTITIES OF zr_clinic_doctor
+        IN LOCAL MODE
         ENTITY Doctor
         FIELDS ( Active )
         WITH CORRESPONDING #( keys )
@@ -278,6 +269,7 @@ CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
         DATA(lv_cid) = |DOCSPEC_{ lv_spec_uuid }|.
 *CREATE THE NEW REGISTRY
         MODIFY ENTITIES OF zr_clinic_doctor
+            IN LOCAL MODE
             ENTITY Doctor
             CREATE BY \_DocSpec
             FIELDS ( Specuuid )
@@ -318,6 +310,80 @@ CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
          ) TO reported-doctor.
 
   ENDLOOP.
+
+  ENDMETHOD.
+
+  METHOD RemoveSpecialty.
+
+    LOOP AT keys INTO DATA(ls_keys).
+
+    DATA(lv_Doctoruuid) = ls_keys-DoctorUUID.
+    DATA(lv_Specuuid) = ls_keys-%param-SpecUUID.
+
+*CHECK REGISTRY WITH DOCTORUUID AND SPECUUID EXISTS
+        READ ENTITIES OF zr_clinic_doctor
+            IN LOCAL MODE
+            ENTITY DocSpec
+            FIELDS ( Doctoruuid Specuuid )
+            WITH VALUE #(
+                (
+                    %key-Doctoruuid = lv_doctoruuid
+                    %key-Specuuid = lv_specuuid
+                )
+            ) RESULT DATA(lt_DocSpec).
+*REGISTRY NOT EXISTS
+        IF lt_DocSpec IS INITIAL.
+
+            APPEND VALUE #(
+                %tky = ls_keys-%tky
+            ) TO failed-doctor.
+
+            APPEND VALUE #(
+                %tky = ls_keys-%tky
+                %msg = new_message(
+                    id = 'ZMC_CLINIC_DOCTOR'
+                    number = '008'
+                    severity = if_abap_behv_message=>severity-error
+                )
+            ) TO reported-doctor.
+
+            CONTINUE.
+
+        ENDIF.
+*TAKE THE TECHNICAL KEY FROM THE FIRST IN THE LT_DOCSPEC TABLE
+        DATA(lv_delete_tky) = lt_DocSpec[ 1 ]-%tky.
+*DELETE THE REGISTER WITH THE TKY
+        MODIFY ENTITIES OF zr_clinic_doctor
+            IN LOCAL MODE
+            ENTITY DocSpec
+            DELETE FROM VALUE #(
+                (
+                    %tky = lv_delete_tky
+
+                 )
+             )
+             FAILED DATA(lt_failed)
+             REPORTED DATA(lt_reported).
+
+        IF lt_failed IS NOT INITIAL.
+            APPEND VALUE #(
+                %tky = ls_keys-%tky
+            ) TO failed-doctor.
+
+            CONTINUE.
+        ENDIF.
+
+        APPEND VALUE #(
+            %tky = ls_keys-%tky
+            %msg = new_message(
+                id = 'ZMC_CLINIC_DOCTOR'
+                number = '009'
+                severity = if_abap_behv_message=>severity-success
+            )
+        ) TO reported-doctor.
+
+
+    ENDLOOP.
 
   ENDMETHOD.
 

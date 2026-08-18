@@ -61,6 +61,13 @@ annotate view ZC_CLINIC_DOCTOR with
     dataAction: 'AddSpecialty',
     label: 'Add Specialty',
     position: 30
+  }, 
+  {
+  qualifier: 'GeneralActions',
+    type: #FOR_ACTION,
+    dataAction: 'RemoveSpecialty',
+    label: 'Remove Specialty',
+    position: 40
   } 
   
   ]
