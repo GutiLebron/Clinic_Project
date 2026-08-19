@@ -1,0 +1,11 @@
+@EndUserText: {
+  label: 'Service Definition for ZC_CLINIC_DATE'
+}
+@ObjectModel: {
+  leadingEntity: {
+    name: 'ZC_CLINIC_DATE'
+  }
+}
+define service ZUI_CLINIC_DATE_O4 provider contracts odata_v4_ui {
+  expose ZC_CLINIC_DATE;
+}

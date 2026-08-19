@@ -1,0 +1,6 @@
+@EndUserText.label: 'ZC_CLINIC_DATE'
+@MappingRole: true
+define role ZC_CLINIC_DATE {
+  grant select on ZC_CLINIC_DATE
+  where INHERITING CONDITIONS FROM ENTITY ZR_CLINIC_DATE REPLACING { ROOT WITH _BaseEntity };
+}

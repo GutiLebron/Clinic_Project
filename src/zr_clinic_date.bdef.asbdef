@@ -1,0 +1,52 @@
+managed implementation in class ZBP_R_CLINIC_DATE unique;
+strict ( 2 );
+with draft;
+extensible;
+define behavior for ZR_CLINIC_DATE alias ZrClinicDate
+persistent table ZCLINIC_DATE
+extensible
+draft table ZCLINIC_DATE_D
+etag master LocalLastChangedAt
+lock master total etag LastChangedAt
+authorization master( global )
+{
+
+  field ( readonly : update, numbering : managed )
+   Dateuuid;
+
+  field ( readonly )
+   CreatedBy,
+   CreatedAt,
+   LastChangedBy,
+   LastChangedAt,
+   LocalLastChangedAt;
+
+
+  create;
+  update;
+  delete;
+
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Edit;
+  draft action Resume;
+  draft determine action Prepare;
+
+  mapping for ZCLINIC_DATE corresponding extensible
+  {
+    Dateuuid = DATEUUID;
+    AppointmentDate = APPOINTMENT_DATE;
+    Patientuuid = PATIENTUUID;
+    Doctoruuid = DOCTORUUID;
+    AppointmentTime = APPOINTMENT_TIME;
+    AppointmentStatus = APPOINTMENT_STATUS;
+    AppointmentType = APPOINTMENT_TYPE;
+    Notes = NOTES;
+    CreatedBy = CREATED_BY;
+    CreatedAt = CREATED_AT;
+    LastChangedBy = LAST_CHANGED_BY;
+    LastChangedAt = LAST_CHANGED_AT;
+    LocalLastChangedAt = LOCAL_LAST_CHANGED_AT;
+  }
+
+}
