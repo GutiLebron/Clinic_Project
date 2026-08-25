@@ -2,7 +2,7 @@ managed implementation in class ZBP_R_CLINIC_DATE unique;
 strict ( 2 );
 with draft;
 extensible;
-define behavior for ZR_CLINIC_DATE alias ZrClinicDate
+define behavior for ZR_CLINIC_DATE alias Date
 persistent table ZCLINIC_DATE
 extensible
 draft table ZCLINIC_DATE_D
@@ -24,7 +24,7 @@ authorization master( global )
 
   create;
   update;
-  delete;
+  //delete; no borraremos las citas que hayan sido agendadas, podremos cancelarlas
 
   draft action Activate optimized;
   draft action Discard;

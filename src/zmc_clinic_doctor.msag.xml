@@ -62,6 +62,24 @@
      <MSGNR>009</MSGNR>
      <TEXT>Specialty has been removed from Doctor</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_CLINIC_DOCTOR</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>Date is not valid</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_CLINIC_DOCTOR</ARBGB>
+     <MSGNR>011</MSGNR>
+     <TEXT>Sundays the clinic is close</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_CLINIC_DOCTOR</ARBGB>
+     <MSGNR>012</MSGNR>
+     <TEXT>Doctor already has dates this day</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

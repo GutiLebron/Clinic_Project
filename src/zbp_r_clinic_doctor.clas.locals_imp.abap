@@ -27,7 +27,13 @@ CLASS lhc_zr_clinic_doctor DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
       RemoveSpecialty
         FOR MODIFY
-        keys FOR ACTION Doctor~RemoveSpecialty.
+        keys FOR ACTION Doctor~RemoveSpecialty,
+
+      GenerateAvailability
+        FOR MODIFY
+        keys FOR ACTION Doctor~GenerateAvailability
+        RESULT result.
+
 ENDCLASS.
 
 CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
@@ -271,7 +277,7 @@ CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
         MODIFY ENTITIES OF zr_clinic_doctor
             IN LOCAL MODE
             ENTITY Doctor
-            CREATE BY \_DocSpec
+            CREATE BY \_DocSpec  "<-CREAMOS EN LA TABLA DOCTOR-SPECIALITY"
             FIELDS ( Specuuid )
             WITH VALUE #(
                 (
@@ -384,6 +390,175 @@ CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
 
 
     ENDLOOP.
+
+  ENDMETHOD.
+
+*METHOD TO GENERATE DATE SLOTS TO ACTIVE DOCTORS
+  METHOD GenerateAvailability.
+
+    DATA lv_cid_counter TYPE i VALUE 0.
+    DATA lt_create TYPE TABLE FOR CREATE zr_clinic_date.
+
+    LOOP AT keys into DATA(ls_keys).
+
+*CATCH PARAMETER DATE IN A VARIABLE
+    DATA(lv_date) = ls_keys-%param-appointment_date.
+    DATA(lv_doc)  = ls_keys-%tky-DoctorUUID.
+    DATA(lv_today) = cl_abap_context_info=>get_system_date(  ).
+
+        IF lv_date IS INITIAL OR lv_date <= lv_today.
+
+            APPEND VALUE #(
+                %tky = ls_keys-%tky
+            ) TO failed-doctor.
+
+            APPEND VALUE #(
+                    %tky = ls_keys-%tky
+                    %msg = new_message(
+                    id = 'ZMC_CLINIC_DOCTOR'
+                    number = '010'
+                    severity = if_abap_behv_message=>severity-error
+                    )
+             ) TO reported-doctor.
+           CONTINUE.
+        ENDIF.
+
+*DAY OF THE WEEK OPEN
+            DATA(lv_weekday) = CONV i( lv_date - '19000101' ) MOD 7.
+
+            IF lv_weekday = 6.
+
+                APPEND VALUE #(
+                    %tky = ls_keys-%tky
+                ) TO failed-doctor.
+
+
+                APPEND VALUE #(
+                    %tky = ls_keys-%tky
+                    %msg = new_message(
+                        id = 'ZMC_CLINIC_DOCTOR'
+                        number = '011'
+                        severity = if_abap_behv_message=>severity-error
+                    )
+                ) TO reported-doctor.
+              CONTINUE.
+            ENDIF.
+
+*DOCTOR IS ACTIVE
+        READ ENTITIES OF zr_clinic_doctor
+            IN LOCAL MODE
+            ENTITY Doctor
+            FIELDS ( Active )
+            WITH VALUE #(
+                (
+                %tky = ls_keys-%tky
+                 )
+             )
+            RESULT DATA(lt_doctor).
+
+            IF lt_doctor IS INITIAL
+            OR lt_doctor[ 1 ]-Active = abap_false.
+
+                APPEND VALUE #(
+                    %tky = ls_keys-%tky
+                ) TO failed-doctor.
+
+                APPEND VALUE #(
+                    %tky = ls_keys-%tky
+                    %msg = new_message(
+                        id = 'ZMC_CLINIC_DOCTOR'
+                        number = '002'
+                        severity = if_abap_behv_message=>severity-error
+                    )
+                ) TO reported-doctor.
+               CONTINUE.
+            ENDIF.
+*DOCTOR ALREADY HAS DATE THIS DAY
+
+           SELECT FROM zclinic_date
+            FIELDS dateuuid
+            WHERE Doctoruuid = @lv_doc
+                AND appointment_date = @lv_date
+            INTO TABLE @DATA(lt_date_doctor).
+
+
+                IF lt_date_doctor IS NOT INITIAL.
+
+                    APPEND VALUE #(
+                        %tky = ls_keys-%tky
+                    ) TO failed-doctor.
+
+                    APPEND VALUE #(
+                        %tky = ls_keys-%tky
+                        %msg = new_message(
+                            id = 'ZMC_CLINIC_DOCTOR'
+                            number = '012'
+                            severity = if_abap_behv_message=>severity-error
+                        )
+                    ) TO reported-doctor.
+
+                  CONTINUE.
+                ENDIF.
+
+*GENERATE DATES FOR ACTIVE DOCTOR
+    DATA lv_time TYPE t VALUE '080000'.
+    DATA ls_new_date TYPE zclinic_date.
+
+    DATA lt_new_dates TYPE STANDARD TABLE OF zclinic_date.
+
+
+          WHILE lv_time < '190000'.
+
+          CLEAR ls_new_date.
+
+            ls_new_date-appointment_date = lv_date.
+            ls_new_date-appointment_time = lv_time.
+            ls_new_date-appointment_status = 'OPEN'.
+            ls_new_date-appointment_type = 'N'.
+            ls_new_date-doctoruuid = lv_doc.
+
+          APPEND ls_new_date TO lt_new_dates.
+
+
+          lv_time = lv_time + 1800.
+
+          ENDWHILE.
+
+          LOOP AT lt_new_dates INTO ls_new_date.
+
+            lv_cid_counter += 1.
+
+            APPEND VALUE #(
+                %cid = |CREATE_{ lv_cid_counter }|
+                Doctoruuid = ls_new_date-doctoruuid
+                AppointmentDate = ls_new_date-appointment_date
+                AppointmentTime = ls_new_date-appointment_time
+                AppointmentStatus = ls_new_date-appointment_status
+                AppointmentType = ls_new_date-appointment_type
+
+            ) TO lt_create.
+
+          ENDLOOP.
+
+
+    ENDLOOP.
+
+        IF lt_create IS NOT INITIAL.
+
+    MODIFY ENTITIES OF zr_clinic_date
+        ENTITY Date
+        CREATE
+        FIELDS ( Doctoruuid AppointmentDate AppointmentTime AppointmentStatus AppointmentType )
+        WITH lt_create
+        MAPPED   DATA(mapped_date)
+        FAILED   DATA(failed_date)
+        REPORTED DATA(reported_date).
+
+    failed-doctor   = CORRESPONDING #( BASE ( failed-doctor )   failed_date-date ).
+    reported-doctor = CORRESPONDING #( BASE ( reported-doctor ) reported_date-date ).
+
+  ENDIF.
+
 
   ENDMETHOD.
 

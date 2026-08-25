@@ -23,4 +23,5 @@ use etag
   use action ReactivateDoctor;
   use action AddSpecialty;
   use action RemoveSpecialty;
+  use action GenerateAvailability;
 }

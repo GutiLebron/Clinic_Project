@@ -41,6 +41,10 @@ authorization master ( global )
     parameter ZCE_CLINIC_SPEC_ACTION;
   action ( features : instance ) RemoveSpecialty
     parameter ZCE_CLINIC_SPEC_ACTION;
+  //Habilitar Citas para médico
+  action GenerateAvailability
+    parameter ZCE_CLINIC_DATE_DAY
+    result [1] ZCE_CLINIC_NUMBER_DATES_RESULT;
 
 
 
