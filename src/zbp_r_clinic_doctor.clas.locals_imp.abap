@@ -426,7 +426,7 @@ CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
 *DAY OF THE WEEK OPEN
             DATA(lv_weekday) = CONV i( lv_date - '19000101' ) MOD 7.
 
-            IF lv_weekday = 6.
+            IF lv_weekday = 0.
 
                 APPEND VALUE #(
                     %tky = ls_keys-%tky
@@ -505,7 +505,10 @@ CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
     DATA ls_new_date TYPE zclinic_date.
 
     DATA lt_new_dates TYPE STANDARD TABLE OF zclinic_date.
-
+*
+**CLEAR VARIABLES
+*    CLEAR lv_time.
+*    CLEAR lt_new_dates.
 
           WHILE lv_time < '190000'.
 
@@ -545,19 +548,54 @@ CLASS lhc_zr_clinic_doctor IMPLEMENTATION.
 
         IF lt_create IS NOT INITIAL.
 
-    MODIFY ENTITIES OF zr_clinic_date
-        ENTITY Date
-        CREATE
-        FIELDS ( Doctoruuid AppointmentDate AppointmentTime AppointmentStatus AppointmentType )
-        WITH lt_create
-        MAPPED   DATA(mapped_date)
-        FAILED   DATA(failed_date)
-        REPORTED DATA(reported_date).
+            MODIFY ENTITIES OF zr_clinic_date
+                ENTITY Date
+                CREATE
+                FIELDS ( Doctoruuid AppointmentDate AppointmentTime AppointmentStatus AppointmentType )
+                WITH lt_create
+                MAPPED   DATA(mapped_date)
+                FAILED   DATA(failed_date)
+                REPORTED DATA(reported_date).
 
-    failed-doctor   = CORRESPONDING #( BASE ( failed-doctor )   failed_date-date ).
-    reported-doctor = CORRESPONDING #( BASE ( reported-doctor ) reported_date-date ).
+            failed-doctor   =
+                CORRESPONDING #(
+                    BASE ( failed-doctor )
+                        failed_date-date ).
 
-  ENDIF.
+            reported-doctor =
+                CORRESPONDING #(
+                    BASE ( reported-doctor )
+                        reported_date-date ).
+
+            IF reported_date-date IS NOT INITIAL.
+
+                APPEND VALUE #(
+                    %tky = ls_keys-%tky
+                ) TO failed-doctor.
+
+                APPEND VALUE #(
+                    %tky = ls_keys-%tky
+                    %msg = new_message(
+                        id = 'ZMC_CLINIC_DOCTOR'
+                        number = '013'
+                        severity = if_abap_behv_message=>severity-error
+                    )
+
+                ) TO reported-doctor.
+
+            ENDIF.
+
+            APPEND VALUE #(
+                %tky = ls_keys-%tky
+                %msg = new_message(
+                id = 'ZMC_CLINIC_DOCTOR'
+                number = '014'
+                severity = if_abap_behv_message=>severity-success
+                v1 = lv_cid_counter
+                 )
+             ) TO reported-doctor.
+
+        ENDIF.
 
 
   ENDMETHOD.

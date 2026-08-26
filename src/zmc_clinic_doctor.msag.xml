@@ -80,6 +80,18 @@
      <MSGNR>012</MSGNR>
      <TEXT>Doctor already has dates this day</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_CLINIC_DOCTOR</ARBGB>
+     <MSGNR>013</MSGNR>
+     <TEXT>Slots to doctor wasn&apos;t created</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZMC_CLINIC_DOCTOR</ARBGB>
+     <MSGNR>014</MSGNR>
+     <TEXT>&amp;1 slots was generated</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>

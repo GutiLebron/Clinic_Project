@@ -68,6 +68,13 @@ annotate view ZC_CLINIC_DOCTOR with
     dataAction: 'RemoveSpecialty',
     label: 'Remove Specialty',
     position: 40
+  }, 
+  {
+  qualifier: 'GeneralActions',
+    type: #FOR_ACTION,
+    dataAction: 'GenerateAvailability',
+    label: 'Generate Slots Date',
+    position: 50
   } 
   
   ]

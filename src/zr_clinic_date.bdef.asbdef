@@ -24,7 +24,7 @@ authorization master( global )
 
   create;
   update;
-  //delete; no borraremos las citas que hayan sido agendadas, podremos cancelarlas
+  delete;
 
   draft action Activate optimized;
   draft action Discard;
